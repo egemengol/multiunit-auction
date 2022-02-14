@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
 import Heap from "heap";
-import { TopNBiddersWrapper } from "../typechain";
+import { MultiunitAuctionWrapper } from "../typechain";
 
 const randomArray = (length: number, max: number) =>
     [...new Array(length)].map(() => Math.round(Math.random() * max));
@@ -31,16 +31,16 @@ function isSuperset(set: Set<any>, subset: Set<any>) {
     randomArray(350, 120),
 ].forEach((bids, i) =>
     describe("Fuzzy Check " + i, () => {
-        let wrapper: TopNBiddersWrapper;
+        let wrapper: MultiunitAuctionWrapper;
         const capacity = 4;
 
         beforeEach(async () => {
-            const libFactory = await ethers.getContractFactory("TopNBidders");
+            const libFactory = await ethers.getContractFactory("MultiunitAuction");
             const lib = await libFactory.deploy();
             await lib.deployed();
-            const factory = await ethers.getContractFactory("TopNBiddersWrapper", {
+            const factory = await ethers.getContractFactory("MultiunitAuctionWrapper", {
                 libraries: {
-                    TopNBidders: lib.address,
+                    MultiunitAuction: lib.address,
                 },
             });
             wrapper = await factory.deploy(capacity);

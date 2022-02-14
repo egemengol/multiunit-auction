@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
-import { TopNBiddersWrapper } from "../typechain";
+import { MultiunitAuctionWrapper } from "../typechain";
 
 const defaultBidAddressPair: [string, BigNumber] = [
     "0x0000000000000000000000000000000000000000",
@@ -15,22 +15,22 @@ const makeBid = (i: number | (() => number) = 5): [string, BigNumber] => {
 };
 
 const expectWinners = async (
-    wrapper: TopNBiddersWrapper,
+    wrapper: MultiunitAuctionWrapper,
     addresses: string[]
 ) =>
     expect(new Set((await wrapper.getWinners())[0])).to.eql(new Set(addresses));
 
 describe("Top N Bidders", function () {
-    let wrapper: TopNBiddersWrapper;
+    let wrapper: MultiunitAuctionWrapper;
     const capacity = 4;
 
     beforeEach(async () => {
-        const libFactory = await ethers.getContractFactory("TopNBidders");
+        const libFactory = await ethers.getContractFactory("MultiunitAuction");
         const lib = await libFactory.deploy();
         await lib.deployed();
-        const factory = await ethers.getContractFactory("TopNBiddersWrapper", {
+        const factory = await ethers.getContractFactory("MultiunitAuctionWrapper", {
             libraries: {
-                TopNBidders: lib.address,
+                MultiunitAuction: lib.address,
             },
         });
         wrapper = await factory.deploy(capacity);
