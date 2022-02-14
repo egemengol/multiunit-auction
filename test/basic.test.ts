@@ -73,4 +73,20 @@ describe("Top N Bidders", function () {
         expect(await wrapper.getMinimum()).to.eql([bidder1, bid1]);
         await expectWinners(wrapper, [bidder2, bidder1, bidder3]);
     });
+
+    it('cannot insert after finishBids', async () => {
+        expect(await wrapper.startBids());
+
+        const bidOld = makeBid()
+        expect(await wrapper.insert(...bidOld));
+        expect(await wrapper.getMinimum()).to.eql(bidOld);
+        await expectWinners(wrapper, [bidOld[0]]);
+
+        expect(await wrapper.finishBids());
+
+        const bidNew = makeBid()
+        await expect(wrapper.insert(...bidNew)).to.be.revertedWith('Wrong stage');
+        expect(await wrapper.getMinimum()).to.eql(bidOld);
+        await expectWinners(wrapper, [bidOld[0]]);
+    })
 });

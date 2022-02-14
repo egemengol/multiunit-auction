@@ -48,7 +48,7 @@ function isSuperset(set: Set<any>, subset: Set<any>) {
             await wrapper.startBids();
         });
 
-        const expectWinnersRelaxed = async (
+        const expectWinnersSandwich = async (
             biddersAndBidsArr: [string, BigNumber][]
         ) => {
             const min = (await wrapper.getMinimum()).bid;
@@ -63,6 +63,7 @@ function isSuperset(set: Set<any>, subset: Set<any>) {
                     .filter(([_, bid]) => bid.gte(min))
                     .map(([addr, _]) => addr)
             );
+            // nom nom
             expect(isSuperset(winners, small));
             expect(isSuperset(big, winners));
         };
@@ -96,7 +97,7 @@ function isSuperset(set: Set<any>, subset: Set<any>) {
                     );
                     expect(await wrapper.getMinimum()).to.eql(oldMin);
                 }
-                await expectWinnersRelaxed(biddersAndBidsArr);
+                await expectWinnersSandwich(biddersAndBidsArr);
             }
         };
 
